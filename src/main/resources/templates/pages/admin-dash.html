@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestão Total - SpeedMedical</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Painel Administrativo</h1>
+        <a th:href="@{/home}" class="btn-principal" style="width: auto;">Voltar</a>
+    </nav>
+
+    <main class="container-home">
+        <div th:replace="~{fragments/alerts :: mensagem}"></div>
+
+        <section class="caixa-branca" style="margin-bottom: 30px;">
+            <h3><i class="fas fa-user-shield"></i> Promover Administrador</h3>
+            <form th:action="@{/admin/cadastrar-admin}" method="post" style="display: flex; gap: 10px; margin-top: 15px;">
+                <input type="text" name="cpf" placeholder="Digite o CPF do usuário" required style="flex: 2;">
+                <select name="nivelAcesso" style="flex: 1; padding: 10px; border-radius: 8px;">
+                    <option value="ROOT">ROOT</option>
+                    <option value="GERENTE">GERENTE</option>
+                </select>
+                <button type="submit" class="btn-principal" style="flex: 1;">Vincular Admin</button>
+            </form>
+        </section>
+
+        <section class="caixa-branca" style="margin-bottom: 30px;">
+            <h3><i class="fas fa-stethoscope"></i> Médicos Aguardando Aprovação</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                    <tr style="background: #f4f4f4; text-align: left;">
+                        <th style="padding: 10px;">Médico</th>
+                        <th>CRM</th>
+                        <th>Atuação</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${profissionais}" th:if="${p.statusAprovacao == 'PENDENTE'}" style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px;" th:text="${p.usuario.nome}"></td>
+                        <td th:text="${p.crm}"></td>
+                        <td th:text="${p.atuacao}"></td>
+                        <td>
+                            <form th:action="@{/admin/aprovar}" method="post">
+                                <input type="hidden" name="usuarioId" th:value="${p.usuario.id}">
+                                <button type="submit" class="btn-principal" style="background: #28a745 !important; padding: 5px 10px;">Aprovar</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="caixa-branca">
+            <h3><i class="fas fa-users"></i> Banco de Dados Unificado (Pacientes)</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                    <tr style="background: #f4f4f4; text-align: left;">
+                        <th style="padding: 10px;">Nome</th>
+                        <th>CPF</th>
+                        <th>SUS</th>
+                        <th>Telefone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="u : ${pacientes}" style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px;" th:text="${u.nome}"></td>
+                        <td th:text="${u.cpf}"></td>
+                        <td th:text="${u.cartaoSus}"></td>
+                        <td th:text="${u.telefone}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <div th:replace="~{fragments/footer :: rodape}"></div>
+</body>
+</html>

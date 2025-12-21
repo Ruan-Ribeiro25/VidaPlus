@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Admin - SpeedMedical</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
+        h2 { border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
+        
+        .card { 
+            background: white; 
+            padding: 25px; 
+            margin-bottom: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+        }
+
+        h3 { margin-top: 0; color: #555; display: flex; align-items: center; gap: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; }
+        th { background: #f8f9fa; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; color: #666; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        tr:hover { background-color: #f9f9f9; }
+
+        /* Badges de Status */
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .badge-pendente { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .badge-ativo { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+
+        /* Botões */
+        .btn-aprovar { 
+            background: #007bff; 
+            color: white; 
+            text-decoration: none; 
+            padding: 6px 12px; 
+            border-radius: 4px; 
+            font-size: 0.85rem; 
+            transition: 0.2s;
+            display: inline-block;
+        }
+        .btn-aprovar:hover { background: #0056b3; }
+        
+        .btn-voltar { color: #6c757d; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-top: 20px; }
+        .btn-voltar:hover { color: #343a40; }
+    </style>
+</head>
+<body>
+
+    <h2><i class="fas fa-user-shield"></i> Painel Administrativo</h2>
+    
+    <div class="card" style="border-left: 5px solid #007bff;">
+        <h3><i class="fas fa-user-md" style="color: #007bff;"></i> Gestão de Profissionais</h3>
+        <p style="color: #777; font-size: 0.9rem;">Aprove os cadastros pendentes para liberar o acesso dos médicos ao sistema.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome do Médico</th>
+                    <th>CRM</th>
+                    <th>Matrícula</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="prof : ${listaProfissionaisCompleta}">
+                    <td th:text="${prof.usuario.nome}">Dr. Exemplo</td>
+                    
+                    <td th:text="${prof.crm}">CRM-0000</td>
+                    <td th:text="${prof.matricula}">MAT-0000</td>
+                    
+                    <td>
+                        <span th:if="${prof.statusAprovacao == 'PENDENTE'}" class="badge badge-pendente">
+                            <i class="fas fa-clock"></i> Pendente
+                        </span>
+                        <span th:if="${prof.statusAprovacao == 'APROVADO'}" class="badge badge-ativo">
+                            <i class="fas fa-check"></i> Ativo
+                        </span>
+                    </td>
+                    
+                    <td>
+                        <a th:if="${prof.statusAprovacao == 'PENDENTE'}" 
+                           th:href="@{'/admin/aprovar/' + ${prof.id}}" 
+                           class="btn-aprovar">
+                           <i class="fas fa-check-circle"></i> Aprovar Cadastro
+                        </a>
+                        
+                        <span th:if="${prof.statusAprovacao == 'APROVADO'}" style="color: #ccc; font-size: 0.9rem;">
+                            Sem ações
+                        </span>
+                    </td>
+                </tr>
+                
+                <tr th:if="${#lists.isEmpty(listaProfissionaisCompleta)}">
+                    <td colspan="5" style="text-align: center; color: #999; padding: 30px;">
+                        Nenhum profissional cadastrado no sistema.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card" style="border-left: 5px solid #20c997;">
+        <h3><i class="fas fa-user-injured" style="color: #20c997;"></i> Pacientes Cadastrados</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pac : ${pacientes}">
+                    <td th:text="${pac.nome}">Nome do Paciente</td>
+                    <td th:text="${pac.cpf}">000.000.000-00</td>
+                    <td th:text="${pac.email}">email@exemplo.com</td>
+                    <td th:text="${pac.telefone}">(00) 00000-0000</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(pacientes)}">
+                    <td colspan="4" style="text-align: center; color: #999;">
+                        Nenhum paciente encontrado para este perfil.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <a th:href="@{/home}" class="btn-voltar">
+        <i class="fas fa-arrow-left"></i> Voltar para o Painel Principal
+    </a>
+
+</body>
+</html>

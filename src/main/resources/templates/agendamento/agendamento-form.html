@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Agendamento</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav>
+        <h1>SpeedMedical</h1>
+        <div class="user-info"><a th:href="@{/pacientes}" class="btn-sair">Voltar</a></div>
+    </nav>
+    <main>
+        <div class="card-container login-size">
+            <h2>Marcar Consulta</h2>
+            
+            <div th:if="${erro}" class="alert-danger" style="margin-bottom: 20px; border-radius: 8px; text-align: left;">
+                <strong th:text="${erro}">Erro</strong><br>
+                <span th:text="${sugestao}" style="color: #155724; font-weight: bold;">Sugestão aqui</span>
+            </div>
+            <form th:action="@{/agendamentos/salvar}" method="post" th:object="${agendamento}">
+                
+                <div class="form-group">
+                    <label>Procedimento / Especialidade</label>
+                    <input type="text" th:field="*{procedimento}" placeholder="Ex: Cardiologista" required class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Profissional</label>
+                    <input type="text" th:field="*{profissional}" placeholder="Ex: Dr. House" required class="form-control">
+                    <small style="color:#888;">Digite o nome exato do médico.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Data e Hora</label>
+                    <input type="datetime-local" th:field="*{dataHora}" required class="form-control">
+                </div>
+
+                <button type="submit" class="btn-custom">Confirmar Agendamento</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

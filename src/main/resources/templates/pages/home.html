@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Geral - SpeedMedical</title>
+    <link rel="stylesheet" th:href="@{/css/style.css?v=HomePro}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav>
+        <h1>SpeedMedical</h1>
+        <div class="user-info">
+            <span>Olá, <strong th:text="${usuario.nome}">Usuário</strong></span>
+            <a th:href="@{/logout}" class="btn-sair"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="welcome-section">
+            <div class="welcome-text">
+                <h2>Painel de Controle</h2>
+                <p>Selecione o módulo que deseja acessar.</p>
+            </div>
+            <i class="fas fa-th-large"></i>
+        </div>
+
+        <div class="dashboard-grid">
+            
+            <a th:href="@{/pacientes}" class="card-action card-paciente">
+                <div class="icon-box"><i class="fas fa-user-injured"></i></div>
+                <h3>Área do Paciente</h3>
+                <p>Acesse seu prontuário, histórico e dados.</p>
+            </a>
+
+            <a th:href="@{/profissional/painel}" class="card-action card-profissional">
+                <div class="icon-box"><i class="fas fa-user-md"></i></div>
+                <h3>Área Profissional</h3>
+                <p>Gestão de atendimentos e agenda médica.</p>
+            </a>
+
+            <a th:href="@{/agendamentos}" class="card-action card-agenda">
+                <div class="icon-box"><i class="fas fa-calendar-alt"></i></div>
+                <h3>Agendamentos</h3>
+                <p>Consulte e marque novas consultas.</p>
+            </a>
+
+            <a th:href="@{/documentos}" class="card-action card-docs">
+                <div class="icon-box"><i class="fas fa-folder-open"></i></div>
+                <h3>Documentos</h3>
+                <p>Central de exames e laudos médicos.</p>
+            </a>
+
+            <a href="#" class="card-action card-tele" style="opacity: 0.7; cursor: not-allowed;" title="Em breve">
+                <div class="icon-box"><i class="fas fa-video"></i></div>
+                <h3>Telemedicina</h3>
+                <p>Consultas online (Em breve).</p>
+            </a>
+
+            <a th:href="@{/admin/painel}" class="card-action card-admin">
+                <div class="icon-box"><i class="fas fa-cogs"></i></div>
+                <h3>Administração</h3>
+                <p>Configurações do sistema.</p>
+            </a>
+
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2025 SpeedMedical - Excelência em Gestão Hospitalar | Uninter
+    </footer>
+
+</body>
+</html>

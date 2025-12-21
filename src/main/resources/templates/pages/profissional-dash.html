@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Médico - SpeedMedical</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1><i class="fas fa-user-md"></i> SpeedMedical | Área Médica</h1>
+        <a th:href="@{/home}" class="btn-principal" style="width: auto; background: transparent !important; border: 1px solid white !important;">Voltar ao Início</a>
+    </nav>
+
+    <main class="container-home">
+        <div th:replace="~{fragments/alerts :: mensagem}"></div>
+
+        <section class="caixa-branca" style="margin-bottom: 30px; border-top: 5px solid var(--verde-agua);">
+            <h3><i class="fas fa-id-card"></i> Meu Registro Profissional</h3>
+            <form th:action="@{/profissional/salvar}" method="post" style="margin-top: 15px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <input type="text" name="crm" placeholder="CRM (Ex: 123456/SP)" required>
+                    <input type="text" name="especialidade" placeholder="Especialidade Principal">
+                </div>
+                <button type="submit" class="btn-principal" style="margin-top: 15px;">Atualizar CRM</button>
+            </form>
+        </section>
+
+        <section class="caixa-branca" style="border-top: 5px solid var(--verde-menta);">
+            <h3><i class="fas fa-notes-medical"></i> Registrar Novo Atendimento</h3>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">
+                Digite o CPF do paciente para vincular automaticamente esta consulta ao prontuário dele.
+            </p>
+            <form th:action="@{/documentos/salvar}" method="post">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <input type="text" name="pacienteCpf" placeholder="CPF do Paciente (Somente números)" style="grid-column: span 2;" required>
+                    
+                    <select name="tipoDocumento" style="grid-column: span 2; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+                        <option value="RECEITA">Receituário Médico</option>
+                        <option value="EXAME">Solicitação de Exame</option>
+                        <option value="LAUDO">Laudo Clínico</option>
+                        <option value="ATESTADO">Atestado Médico</option>
+                    </select>
+
+                    <textarea name="conteudo" placeholder="Descreva aqui a prescrição, orientações ou laudo detalhado..." rows="6" style="grid-column: span 2; width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;" required></textarea>
+                    
+                    <button type="submit" class="btn-principal" style="grid-column: span 2; background-color: var(--verde-agua) !important;">
+                        <i class="fas fa-save"></i> Finalizar e Enviar ao Prontuário
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: rodape}"></div>
+</body>
+</html>

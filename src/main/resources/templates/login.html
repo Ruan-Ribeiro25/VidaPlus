@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - SpeedMedical</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <nav>
+        <h1 style="width: 100%; text-align: center;">SpeedMedical</h1>
+    </nav>
+
+    <main>
+        <div class="card-container login-size">
+            <h2>Login</h2>
+
+            <div th:if="${param.error}" class="error">
+                CPF ou senha incorretos.
+            </div>
+            <div th:if="${param.logout}" class="alert-success">
+                Logout realizado com sucesso.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Usuário (CPF)</label>
+                    <input type="text" id="username" name="username" placeholder="000.000.000-00" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" placeholder="********" required>
+                </div>
+
+                <button type="submit" class="btn-custom">Entrar</button>
+            </form>
+
+            <div class="links">
+                <p>Novo por aqui? <a th:href="@{/register}">Cadastre-se</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2025 SpeedMedical
+    </footer>
+
+</body>
+</html>

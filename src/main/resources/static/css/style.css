@@ -1,0 +1,244 @@
+/* ============================================================
+   1. RESET E FUNDAMENTOS
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+body {
+    background-color: #f4f7f6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-size: 16px;
+    color: #333;
+}
+
+/* ============================================================
+   2. BARRA DE NAVEGAÇÃO
+   ============================================================ */
+nav {
+    background: linear-gradient(135deg, #20c997 0%, #17a589 100%);
+    color: white;
+    padding: 15px 40px;
+    box-shadow: 0 4px 12px rgba(32, 201, 151, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky; top: 0; z-index: 1000;
+}
+nav h1 { font-size: 1.6rem; font-weight: 700; margin: 0; letter-spacing: 0.5px; }
+
+.user-info { font-size: 0.95rem; display: flex; align-items: center; gap: 15px; font-weight: 500; }
+
+.btn-sair {
+    background-color: rgba(255, 255, 255, 0.2); color: white; padding: 8px 25px;
+    border-radius: 30px; border: 1px solid rgba(255,255,255,0.4);
+    text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;
+}
+.btn-sair:hover { background-color: white; color: #17a589; }
+
+/* ============================================================
+   3. ESTRUTURA PRINCIPAL
+   ============================================================ */
+main {
+    flex: 1; display: flex; flex-direction: column;
+    padding: 40px 20px; width: 100%; max-width: 1200px; margin: 0 auto;
+}
+
+/* Linha verde do título ajustada */
+.page-title {
+    width: 100%; margin-bottom: 30px; font-size: 1.8rem; color: #2c3e50; font-weight: 700;
+    border-bottom: 4px solid #20c997;
+    border-left: none !important; /* Remove a linha vertical no desktop */
+    padding-bottom: 15px; text-align: center;
+}
+
+/* ============================================================
+   4. FORMULÁRIOS & LOGIN
+   ============================================================ */
+.card-container, .card-custom {
+    background-color: white; padding: 40px; border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%;
+    border-top: 5px solid #20c997; margin-bottom: 20px;
+}
+.login-size { max-width: 450px; margin: 0 auto; }
+.register-size { max-width: 900px; margin: 0 auto; }
+
+h2 { color: #20c997; margin-bottom: 25px; text-align: center; }
+
+.form-group { margin-bottom: 20px; text-align: left; }
+label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; font-size: 0.9rem; }
+
+input, .form-control {
+    width: 100%; padding: 12px 15px; border: 1px solid #ddd;
+    border-radius: 8px; font-size: 1rem; background-color: #fafafa; transition: 0.3s;
+}
+input:focus { background-color: #fff; border-color: #20c997; outline: none; box-shadow: 0 0 0 4px rgba(32, 201, 151, 0.1); }
+
+button, .btn-custom {
+    width: 100%; padding: 14px; background-color: #20c997; color: white;
+    border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s;
+}
+button:hover, .btn-custom:hover { background-color: #17a589; }
+
+.links { margin-top: 20px; text-align: center; font-size: 0.9rem; }
+.links a { color: #20c997; font-weight: bold; text-decoration: none; }
+
+/* Grid do Form de Cadastro */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.full-width { grid-column: span 2; }
+.address-group, .city-group { grid-column: span 2; display: grid; grid-template-columns: 3fr 1fr; gap: 15px; }
+.form-grid button, .form-grid .links { grid-column: span 2; }
+
+/* ============================================================
+   5. HOME DASHBOARD (CARDS)
+   ============================================================ */
+.welcome-section {
+    background: white; padding: 30px; border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 40px;
+    border-left: 6px solid #20c997; display: flex; align-items: center;
+    justify-content: space-between; width: 100%;
+}
+.welcome-text h2 { margin: 0 0 10px 0; color: #2c3e50; text-align: left; }
+
+.dashboard-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px; width: 100%;
+}
+
+.card-action {
+    background: white; border-radius: 16px; padding: 30px;
+    text-align: center; text-decoration: none; color: #333;
+    transition: all 0.4s; box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    border: 1px solid #f0f2f5; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; height: 100%;
+}
+.card-action:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(32, 201, 151, 0.15); border-color: #20c997; }
+
+.card-action .icon-box {
+    width: 80px; height: 80px; line-height: 80px; border-radius: 50%;
+    margin-bottom: 20px; font-size: 2rem; display: flex; align-items: center; justify-content: center;
+}
+/* Cores dos Ícones */
+.card-paciente .icon-box { background: #e3fcf7; color: #20c997; }
+.card-profissional .icon-box { background: #e8f4fd; color: #3498db; }
+.card-agenda .icon-box { background: #fff3cd; color: #f1c40f; }
+.card-docs .icon-box { background: #fbecec; color: #e74c3c; }
+.card-tele .icon-box { background: #f3e5f5; color: #9b59b6; }
+.card-admin .icon-box { background: #eceff1; color: #607d8b; }
+
+.card-action h3 { margin: 10px 0; font-size: 1.2rem; color: #2c3e50; }
+.card-action p { color: #95a5a6; font-size: 0.9rem; }
+
+/* ============================================================
+   6. PRONTUÁRIO / AGENDAMENTOS (Perfil + Tabela)
+   ============================================================ */
+.prontuario-container {
+    display: grid; grid-template-columns: 1fr 2fr; gap: 30px; align-items: start; width: 100%;
+}
+
+/* Card Perfil */
+.profile-card {
+    background: white; border-radius: 16px; padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05); border-top: 5px solid #20c997; text-align: center;
+}
+.profile-avatar {
+    width: 100px; height: 100px; background-color: #e6fffa; color: #20c997;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; margin: 0 auto 20px auto;
+}
+.data-row { text-align: left; margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f2f5; }
+.data-row strong { display: block; color: #2c3e50; font-size: 0.85rem; margin-top: 12px; }
+.data-row span { color: #555; font-size: 0.95rem; }
+
+.link-acao {
+    display: inline-block; margin-top: 20px; color: #20c997; font-weight: 700;
+    text-decoration: none; font-size: 0.9rem; transition: 0.2s;
+}
+.link-acao:hover { color: #17a589; text-decoration: underline; }
+
+/* Card Histórico/Tabela */
+.history-card {
+    background: white; border-radius: 16px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+.section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 25px; border-bottom: 2px solid #f0f2f5; padding-bottom: 15px;
+}
+.section-header h3 { color: #20c997; font-size: 1.2rem; margin: 0; display: flex; align-items: center; gap: 10px; }
+
+/* Tabela */
+table { width: 100%; border-collapse: separate; border-spacing: 0; }
+th { text-align: left; padding: 15px; color: #95a5a6; font-size: 0.8rem; text-transform: uppercase; border-bottom: 2px solid #f0f2f5; }
+td { padding: 15px; color: #2c3e50; border-bottom: 1px solid #f0f2f5; }
+.status-tag { padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; }
+.status-Concluído { background-color: #d4edda; color: #155724; }
+.status-Agendado { background-color: #fff3cd; color: #856404; }
+.status-Cancelado { background-color: #f8d7da; color: #721c24; }
+
+.btn-novo {
+    background-color: #20c997; color: white; padding: 10px 20px; border-radius: 8px;
+    text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.3s;
+}
+.btn-novo:hover { background-color: #17a589; }
+
+/* ============================================================
+   7. RODAPÉ (Cor Ajustada)
+   ============================================================ */
+footer {
+    background-color: #20C897; /* A cor hexadecimal solicitada */
+    color: white; /* Texto branco para contraste */
+    text-align: center;
+    padding: 25px;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+/* ============================================================
+   8. MEDIA QUERIES
+   ============================================================ */
+
+/* 1. TABLETS (Até 1024px) */
+@media (max-width: 1024px) {
+    main { padding: 30px 15px; }
+    .prontuario-container { grid-template-columns: 1fr; gap: 20px; }
+}
+
+/* 2. TABLETS MENORES / CELULARES GRANDES (Até 768px) */
+@media (max-width: 768px) {
+    nav { flex-direction: column; gap: 15px; padding: 15px; }
+    .user-info { flex-direction: column; gap: 10px; }
+    
+    .welcome-section { flex-direction: column; text-align: center; gap: 20px; }
+    .welcome-section i { display: none; }
+    
+    .form-grid { grid-template-columns: 1fr; }
+    .full-width, .address-group, .city-group, .form-grid button, .form-grid .links { grid-column: span 1; }
+    .address-group, .city-group { grid-template-columns: 1fr; }
+}
+
+/* 3. CELULARES (Até 480px) */
+@media (max-width: 480px) {
+    nav h1 { font-size: 1.4rem; }
+    .page-title { font-size: 1.5rem; text-align: center; }
+
+    /* Home Dashboard: Cards viram Horizontais */
+    .dashboard-grid { grid-template-columns: 1fr; gap: 15px; }
+    
+    .card-action {
+        flex-direction: row; text-align: left; padding: 20px;
+        justify-content: flex-start; min-height: auto;
+    }
+    .card-action .icon-box {
+        width: 50px; height: 50px; font-size: 1.2rem;
+        margin-bottom: 0; margin-right: 20px; flex-shrink: 0;
+    }
+    .card-action h3 { margin: 0 0 5px 0; font-size: 1.1rem; }
+    .card-action p { font-size: 0.85rem; margin: 0; }
+
+    /* Prontuário */
+    .history-card { padding: 15px; overflow-x: auto; }
+    table { min-width: 500px; }
+    
+    .section-header { flex-direction: column; gap: 15px; align-items: stretch; text-align: center; }
+    .btn-novo { display: block; width: 100%; text-align: center; }
+}
