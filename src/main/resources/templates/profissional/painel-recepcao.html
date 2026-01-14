@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recepção - VidaPlus</title>
+    <th:block th:replace="~{fragments/favicon :: icone}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <main style="padding: 20px;">
+        <div class="page-header" style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;">
+            <h2><i class="fas fa-concierge-bell"></i> Recepção</h2>
+            <div class="user-info d-flex align-items-center">
+                <div class="me-3"><img src="/img/avatar-default.png" class="profile-pic-header-small" style="width: 50px; height: 50px; border-radius: 50%;"></div>
+                <div class="d-flex flex-column align-items-end">
+                    <span th:text="${profissional.nome}" class="fw-bold">Nome</span>
+                    <span class="tag-enf" style="background-color: #6f42c1;">RECEPCIONISTA</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dash-container" style="display: flex; gap: 20px;">
+            <aside class="sidebar" style="width: 300px; flex-shrink: 0;">
+                <h3 class="sidebar-title">Pacientes</h3>
+                <form th:action="@{/profissional/painel}" method="get" class="search-box mb-20">
+                    <input type="text" name="busca" placeholder="CPF ou Nome..." class="form-control mb-10">
+                    <button type="submit" class="btn-custom w-100" style="background: #6f42c1;">Buscar</button>
+                </form>
+                <a href="/pacientes/novo" class="btn btn-outline-primary w-100 mb-3 rounded-pill fw-bold">Novo Cadastro</a>
+                <ul class="patient-list patient-list-scroll">
+                    <li th:each="p : ${resultados}">
+                        <div class="patient-card-item">
+                            <div class="patient-info-min">
+                                <strong th:text="${p.nome}"></strong>
+                                <small th:text="'CPF: ' + ${p.cpf}"></small>
+                            </div>
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                    </li>
+                </ul>
+            </aside>
+
+            <section class="main-content" style="flex-grow: 1;">
+                <div class="welcome-card-doctor mb-30 p-4" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); border-radius: 15px; color: white;">
+                    <h3><i class="far fa-calendar-alt me-2"></i>Agendamentos do Dia</h3>
+                    <p>Controle de fila e check-in.</p>
+                </div>
+                <div class="card-box p-4 bg-white rounded shadow-sm border">
+                    <table class="table table-hover">
+                        <thead><tr><th>Horário</th><th>Paciente</th><th>Especialidade</th><th>Status</th><th>Ação</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td>08:00</td><td>Ana Clara</td><td>Cardiologia</td>
+                                <td><span class="badge bg-warning text-dark">Aguardando</span></td>
+                                <td><button class="btn btn-sm btn-success rounded-pill">Check-in</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer th:replace="~{fragments/footer :: rodape}"></footer>
+</body>
+</html>

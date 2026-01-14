@@ -2,137 +2,64 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus Agendamentos - SpeedMedical</title>
+    <title>Meus Agendamentos - VidaPlus</title>
+    <th:block th:replace="~{fragments/favicon :: icone}"></th:block>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <style>
-        /* Estilos específicos para Cards de Agendamento */
-        .agenda-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            width: 100%;
-        }
-
-        .agenda-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border-left: 5px solid #ccc; /* Cor padrão */
-            transition: transform 0.2s;
-        }
-        .agenda-card:hover { transform: translateY(-3px); }
-
-        /* Cores baseadas no Status */
-        .border-Agendado { border-left-color: #ffc107; } /* Amarelo */
-        .border-Concluído { border-left-color: #20c997; } /* Verde */
-        .border-Cancelado { border-left-color: #dc3545; } /* Vermelho */
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-
-        .date-box {
-            text-align: center;
-            background: #f8f9fa;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            color: #555;
-            line-height: 1.2;
-        }
-        .date-box span { display: block; font-size: 1.2rem; color: #333; }
-        .date-box small { font-size: 0.75rem; text-transform: uppercase; }
-
-        .proc-info h4 { margin: 0; color: #333; font-size: 1.1rem; }
-        .proc-info p { margin: 5px 0 0 0; color: #666; font-size: 0.9rem; }
-
-        .card-footer {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        .badge-Agendado { background: #fff3cd; color: #856404; }
-        .badge-Concluído { background: #d4edda; color: #155724; }
-        .badge-Cancelado { background: #f8d7da; color: #721c24; }
-
-        .empty-state {
-            text-align: center;
-            padding: 50px;
-            color: #888;
-            background: white;
-            border-radius: 12px;
-            width: 100%;
-        }
-    </style>
 </head>
 <body>
 
-    <nav>
-        <h1>SpeedMedical</h1>
-        <div class="user-info">
-            <a th:href="@{/home}" class="btn-sair" style="border: 1px solid white;">Voltar</a>
-            Olá, <span th:text="${usuario.nome}">Usuário</span>
-        </div>
-    </nav>
+    <div th:replace="~{fragments/header :: navbar}"></div>
 
     <main>
-        <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-bottom:30px;">
-            <h2 class="page-title" style="margin:0; text-align:left; border:none; padding:0;">Meus Agendamentos</h2>
-            <a th:href="@{/agendamentos/novo}" class="btn-custom" style="width:auto; padding:10px 25px; text-decoration:none;">
-                <i class="fas fa-plus"></i> Novo
+        <div class="page-header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <a th:href="@{/pacientes}" title="Voltar" style="color: white; font-size: 1.4rem; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h2 style="margin: 0;">Meus Agendamentos</h2>
+            </div>
+            
+            <a th:href="@{/agendamentos/novo}" class="btn-novo">
+                <i class="fas fa-plus"></i> Novo Agendamento
             </a>
         </div>
 
-        <div th:if="${#lists.isEmpty(agendamentos)}" class="empty-state">
-            <i class="fas fa-calendar-times" style="font-size: 3rem; margin-bottom: 15px; color:#ddd;"></i>
-            <p>Você ainda não possui agendamentos.</p>
+        <div th:if="${#lists.isEmpty(agendamentos)}" style="text-align:center; padding: 50px; background: white; border-radius: 12px; width: 100%; box-shadow: 0 5px 15px rgba(0,0,0,0.03);">
+            <i class="far fa-calendar-times" style="font-size: 4rem; color: #ddd; margin-bottom: 15px;"></i>
+            <p style="color:#888; font-size: 1.1rem;">Nenhuma consulta encontrada no momento.</p>
         </div>
 
         <div class="agenda-grid">
             <div th:each="agenda : ${agendamentos}" 
-                 th:class="'agenda-card border-' + ${agenda.status}">
+                 th:class="'agenda-card card-' + ${agenda.status}">
                 
-                <div class="card-header">
+                <div class="card-top">
                     <div class="proc-info">
-                        <h4 th:text="${agenda.procedimento}">Cardiologista</h4>
-                        <p><i class="fas fa-user-md"></i> <span th:text="${agenda.profissional}">Dr. House</span></p>
+                        <h3 th:text="${agenda.procedimento}">Consulta Geral</h3>
+                        <p><i class="fas fa-user-md"></i> <span th:text="${agenda.profissional}">Dr. Nome</span></p>
                     </div>
                     
                     <div class="date-box">
-                        <span th:text="${#temporals.format(agenda.dataHora, 'dd')}">20</span>
-                        <small th:text="${#temporals.format(agenda.dataHora, 'MMM')}">DEZ</small>
+                        <span class="date-day" th:text="${#temporals.format(agenda.dataHora, 'dd')}">01</span>
+                        <span class="date-month" th:text="${#temporals.format(agenda.dataHora, 'MMM')}">JAN</span>
                     </div>
                 </div>
 
-                <div class="card-footer">
-                    <div>
-                        <i class="far fa-clock" style="color:#888;"></i> 
-                        <strong th:text="${#temporals.format(agenda.dataHora, 'HH:mm')}">14:00</strong>
+                <div class="card-bottom">
+                    <div class="time-badge">
+                        <i class="far fa-clock"></i> 
+                        <span th:text="${#temporals.format(agenda.dataHora, 'HH:mm')}">00:00</span>
                     </div>
-                    <span th:class="'status-badge badge-' + ${agenda.status}" th:text="${agenda.status}">Agendado</span>
+                    
+                    <span th:class="'status-pill pill-' + ${agenda.status}" th:text="${agenda.status}">Agendado</span>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <footer>&copy; 2025 SpeedMedical</footer>
+    <div th:replace="~{fragments/footer :: rodape}"></div>
+
 </body>
 </html>

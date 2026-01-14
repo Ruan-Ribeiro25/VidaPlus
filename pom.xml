@@ -5,15 +5,19 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.3</version> <relativePath/>
-    </parent>
-    <groupId>com.speedmedical</groupId>
-    <artifactId>speedmedical</artifactId>
+        <version>3.2.3</version>
+        <relativePath/> </parent>
+    
+    <groupId>com.vidaplus</groupId>
+    <artifactId>vidaplus</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>speedmedical</name>
+    <name>vidaplus</name>
+    <description>Sistema de Gestão Hospitalar VidaPlus</description>
+    
     <properties>
         <java.version>21</java.version>
     </properties>
+    
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -34,6 +38,7 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
         </dependency>
         
         <dependency>
@@ -43,12 +48,21 @@
         </dependency>
         
         <dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
         
     </dependencies>
+    
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -56,4 +70,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

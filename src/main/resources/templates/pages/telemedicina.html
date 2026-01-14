@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Telemedicina - VidaPlus</title>
+    
+    <th:block th:replace="~{fragments/favicon :: icone}"></th:block>
+    
+    <link rel="stylesheet" th:href="@{/css/style.css}"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body class="page-telemedicina">
+
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <main class="tele-main">
+        <div class="tele-grid">
+            
+            <div class="video-stage">
+                <div class="availability-bar">
+                    <i class="fas fa-clock"></i>
+                    <span>Atendimento disponível: Seg à Sex, 08:00 - 18:00</span>
+                </div>
+
+                <div class="main-video-container">
+                    <div class="placeholder-content" id="remotePlaceholder">
+                        <i class="fas fa-user-md" style="font-size: 4rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <h3>Aguardando conexão...</h3>
+                        <p style="font-size: 0.9rem;">Sua consulta é criptografada e segura.</p>
+                    </div>
+                </div>
+
+                <div class="my-video-pip">
+                    <video id="localVideo" autoplay playsinline muted></video>
+                </div>
+
+                <div class="controls-bar">
+                    <button class="btn-control" onclick="toggleMute(this)" title="Mutar Microfone"><i class="fas fa-microphone"></i></button>
+                    <button class="btn-control" onclick="toggleCam(this)" title="Ligar/Desligar Câmera"><i class="fas fa-video"></i></button>
+                    <a href="/home" class="btn-control btn-danger" title="Encerrar Consulta" style="text-decoration: none;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="chat-panel">
+                <div class="chat-header">
+                    <div>
+                        <h4 style="margin:0; font-size:1rem;"><i class="far fa-file-alt"></i> Prontuário / Chat</h4>
+                        <small style="color:var(--primary); font-size:0.75rem;">Dr(a). Fernanda Oliveira</small>
+                    </div>
+                    <i class="fas fa-ellipsis-v" style="color:#64748b; cursor:pointer;"></i>
+                </div>
+
+                <div class="chat-messages" id="chatBody">
+                    <div class="msg msg-in">
+                        Bem-vindo à sala de Telemedicina. Você pode enviar mensagens e exames por aqui.
+                        <span class="msg-time">Sistema</span>
+                    </div>
+                </div>
+
+                <div class="emoji-bar" id="emojiBar">
+                    <span onclick="addEmoji('👍')">👍</span>
+                    <span onclick="addEmoji('👋')">👋</span>
+                    <span onclick="addEmoji('😷')">😷</span>
+                    <span onclick="addEmoji('💊')">💊</span>
+                    <span onclick="addEmoji('🩺')">🩺</span>
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="input-box">
+                        
+                        <button type="button" class="btn-chat-icon" onclick="toggleEmoji()" title="Emojis" style="font-size: 0.9rem;">
+                            <i class="far fa-smile"></i>
+                        </button>
+
+                        <input type="text" id="msgInput" class="input-field" placeholder="Digite sua mensagem..." onkeypress="handleEnter(event)" autocomplete="off">
+
+                        <div class="right-actions">
+                            <button type="button" class="btn-chat-icon" onclick="acionarInputArquivo()" title="Anexar Documento/PDF" style="font-size: 0.9rem;">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+
+                            <button type="button" class="btn-chat-icon btn-send" onclick="sendMessage()" title="Enviar" style="font-size: 0.9rem;">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <input type="file" id="fileUpload" style="display: none;" onchange="handleFileUpload(this)" accept="application/pdf,image/*">
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: rodape}"></div>
+
+    <script>
+        // --- FUNÇÕES DE ARQUIVO ---
+        function acionarInputArquivo() {
+            document.getElementById('fileUpload').click();
+        }
+
+        function handleFileUpload(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const fileName = file.name;
+                
+                let icon = 'fa-file';
+                if(fileName.toLowerCase().endsWith('.pdf')) icon = 'fa-file-pdf';
+                if(fileName.match(/\.(jpg|jpeg|png|gif)$/i)) icon = 'fa-file-image';
+
+                const htmlContent = `
+                    <div class="file-attachment" style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px; margin-bottom: 5px;">
+                        <i class="far ${icon}" style="font-size: 1.5rem; color: #38bdf8;"></i>
+                        <div style="display:flex; flex-direction:column;">
+                            <span style="font-weight:bold; font-size:0.75rem; color: #f8fafc;">${fileName}</span>
+                            <span style="font-size:0.65rem; color: #94a3b8;">Documento Anexado</span>
+                        </div>
+                    </div>
+                `;
+                
+                appendMessage(htmlContent, 'out', true); 
+                input.value = ''; 
+            }
+        }
+
+        // --- FUNÇÕES DE CHAT ---
+        function appendMessage(content, type, isHtml = false) {
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const chatBody = document.getElementById('chatBody');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `msg msg-${type}`;
+            msgDiv.innerHTML = isHtml ? content + `<span class="msg-time">${time}</span>` : `${content}<span class="msg-time">${time}</span>`;
+            chatBody.appendChild(msgDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('msgInput');
+            if(input.value.trim() === "") return;
+            appendMessage(input.value, 'out');
+            input.value = "";
+            input.focus();
+        }
+
+        function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
+
+        function toggleEmoji() { 
+            const bar = document.getElementById('emojiBar');
+            bar.style.display = (bar.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function addEmoji(e) { 
+            const input = document.getElementById('msgInput');
+            input.value += e;
+            input.focus();
+        }
+
+        // --- CONTROLES DE MÍDIA ---
+        function toggleMute(btn) {
+            btn.classList.toggle('active-red');
+            const icon = btn.querySelector('i');
+            icon.className = btn.classList.contains('active-red') ? "fas fa-microphone-slash" : "fas fa-microphone";
+            btn.style.backgroundColor = btn.classList.contains('active-red') ? "#ef4444" : "rgba(255,255,255,0.1)";
+        }
+
+        function toggleCam(btn) {
+            btn.classList.toggle('active-red');
+            const icon = btn.querySelector('i');
+            icon.className = btn.classList.contains('active-red') ? "fas fa-video-slash" : "fas fa-video";
+            btn.style.backgroundColor = btn.classList.contains('active-red') ? "#ef4444" : "rgba(255,255,255,0.1)";
+        }
+
+        // Inicializa Câmera Local
+        window.onload = async function() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('localVideo').srcObject = stream;
+            } catch (e) { 
+                console.error("Acesso à câmera negado ou não encontrado."); 
+            }
+        };
+    </script>
+</body>
+</html>

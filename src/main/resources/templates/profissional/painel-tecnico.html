@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Técnico - VidaPlus</title>
+    <th:block th:replace="~{fragments/favicon :: icone}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <main style="padding: 20px;">
+        <div class="page-header" style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;">
+            <h2><i class="fas fa-microscope"></i> Laboratório</h2>
+            <div class="user-info d-flex align-items-center">
+                <div class="me-3"><img src="/img/avatar-default.png" class="profile-pic-header-small" style="width: 50px; height: 50px; border-radius: 50%;"></div>
+                <div class="d-flex flex-column align-items-end">
+                    <span th:text="${profissional.nome}" class="fw-bold">Nome</span>
+                    <span class="tag-enf" style="background-color: #d35400;">TÉCNICO</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dash-container" style="display: flex; gap: 20px;">
+            <aside class="sidebar" style="width: 300px; flex-shrink: 0;">
+                <h3 class="sidebar-title">Solicitações</h3>
+                <form th:action="@{/profissional/painel}" method="get" class="search-box mb-20">
+                    <input type="text" name="busca" placeholder="Paciente..." class="form-control mb-10">
+                    <button type="submit" class="btn-custom w-100" style="background: #e67e22;">Buscar</button>
+                </form>
+                <ul class="patient-list patient-list-scroll">
+                    <li th:each="p : ${resultados}">
+                        <a th:href="@{/profissional/painel(idPaciente=${p.id})}" class="patient-card-item">
+                            <div class="patient-info-min">
+                                <strong th:text="${p.nome}"></strong>
+                                <small>Exame Pendente</small>
+                            </div>
+                            <i class="fas fa-flask"></i>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <section class="main-content" style="flex-grow: 1;">
+                <div th:if="${pacienteSelecionado != null}">
+                    <div class="patient-header-banner p-4 mb-40 d-flex align-items-center justify-content-between" 
+                         style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); border-radius: 15px; color: white;">
+                        <div class="d-flex align-items-center" style="gap: 25px;">
+                            <img th:src="${pacienteSelecionado.fotoPerfil != null} ? 'data:image/jpeg;base64,' + ${pacienteSelecionado.fotoPerfil} : '/img/avatar-paciente.png'" 
+                                 style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.4); object-fit: cover;">
+                            <div>
+                                <h2 class="m-0" th:text="${pacienteSelecionado.nome}"></h2>
+                                <p class="m-0">Coleta / Resultados</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="diagnosis-form-area p-4 mb-30" style="background:#fff; border-radius:12px; border:1px solid #ddd;">
+                        <h4 class="mb-3">Anexar Resultado</h4>
+                        <form th:action="@{/profissional/upload-documento}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="idPaciente" th:value="${pacienteSelecionado.id}">
+                            <div class="mb-3"><input type="text" name="descricao" class="form-control" placeholder="Tipo de Exame" required></div>
+                            <div class="mb-3"><input type="file" name="arquivo" class="form-control" required></div>
+                            <button type="submit" class="btn-custom w-100" style="background: #e67e22;">Salvar</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer th:replace="~{fragments/footer :: rodape}"></footer>
+</body>
+</html>

@@ -2,121 +2,200 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro - SpeedMedical</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .card-custom { width: 100%; max-width: 800px; padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); background: white; border-top: 5px solid #20c997; }
-        .header-title { color: #20c997; font-weight: bold; text-align: center; margin-bottom: 30px; }
-        .btn-custom { background-color: #20c997; border: none; padding: 12px; font-size: 1.1rem; color: white; width: 100%; font-weight: bold; border-radius: 8px; transition: 0.3s; }
-        .btn-custom:hover { background-color: #17a589; }
-        .form-label { font-weight: 500; color: #555; font-size: 0.9rem; }
-        .form-control { background-color: #f8f9fa; border: 1px solid #eee; padding: 10px; }
-        .form-control:focus { box-shadow: none; border-color: #20c997; background: white; }
-    </style>
+    <title>Cadastro - VidaPlus</title>
+    <th:block th:replace="~{fragments/favicon :: icone}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
+    
+    <div th:replace="~{fragments/header :: navbar}"></div>
 
-    <div class="card-custom">
-        <h3 class="header-title">Cadastro de Usuário</h3>
-        
-        <div th:if="${error}" class="alert alert-danger text-center" th:text="${error}"></div>
-
-        <form th:action="@{/register}" th:object="${usuario}" method="post" class="row g-3">
-            
-            <div class="col-12">
-                <label class="form-label">Nome Completo:</label>
-                <input type="text" th:field="*{nome}" class="form-control" placeholder="Ex: João da Silva" required>
+    <main>
+        <div class="login-container" style="width: 100%; max-width: 600px; padding: 30px;">
+            <div class="login-header" style="text-align: center;">
+                <h2 style="color: #20c997;">Criar Conta</h2>
+                <p>Preencha todos os dados abaixo</p>
             </div>
 
-            <div class="col-md-6">
-                <label class="form-label">Crie seu Login (Usuário):</label>
-                <input type="text" name="username" class="form-control" placeholder="Ex: andre.silva" required autocomplete="username">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Crie sua Senha:</label>
-                <input type="password" th:field="*{password}" class="form-control" placeholder="Mínimo 6 caracteres" required autocomplete="new-password">
+            <div th:if="${error}" class="alert-erro" style="background:#fdecea; color:#e74c3c; padding:10px; text-align:center; margin-bottom:15px; border-radius:5px;">
+                <span th:text="${error}"></span>
             </div>
 
-            <div class="col-md-6">
-                <label class="form-label">CPF (Apenas Números):</label>
-                <input type="text" th:field="*{cpf}" class="form-control" placeholder="000.000.000-00" required autocomplete="off">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">RG:</label>
-                <input type="text" th:field="*{rg}" class="form-control" placeholder="00.000.000-X">
-            </div>
+            <form th:action="@{/register}" th:object="${usuario}" method="post">
+                
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" th:field="*{nome}" class="form-control" placeholder="Seu nome" required>
+                </div>
 
-            <div class="col-md-6">
-                <label class="form-label">Cartão SUS:</label>
-                <input type="text" th:field="*{cartao_sus}" class="form-control" placeholder="Opcional">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Telefone (WhatsApp):</label>
-                <input type="text" th:field="*{telefone}" class="form-control" placeholder="(00) 00000-0000" required>
-            </div>
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>CPF</label>
+                        <input type="text" th:field="*{cpf}" class="form-control" placeholder="000.000.000-00" required>
+                    </div>
+                    <div>
+                        <label>RG</label>
+                        <input type="text" th:field="*{rg}" class="form-control" placeholder="00.000.000-0" required>
+                    </div>
+                </div>
 
-            <div class="col-12">
-                <label class="form-label">E-mail:</label>
-                <input type="email" th:field="*{email}" class="form-control" placeholder="seu@email.com" required>
-            </div>
+                <div class="form-group">
+                    <label>Data de Nascimento</label>
+                    <input type="date" th:field="*{dataNascimento}" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Cartão SUS</label>
+                    <input type="text" th:field="*{cartaoSus}" class="form-control" placeholder="Número do cartão SUS" required>
+                </div>
 
-            <hr class="my-4" style="color: #ddd;">
-            <p style="margin-top: 0; color: #888; font-size: 0.9rem;">Endereço (Para localizar unidades próximas):</p>
+                <h4 style="color: #666; margin: 15px 0 10px 0; border-bottom: 1px solid #eee; padding-bottom: 5px;">Endereço e Polo</h4>
+                
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+                    <div>
+                        <label>CEP</label>
+                        <input type="text" th:field="*{cep}" class="form-control" required>
+                    </div>
+                    
+                    <div>
+                        <label>Cidade (Polo de Atuação)</label>
+                        <select th:field="*{cidade}" id="selectCidade" class="form-control" style="width: 100%;" required>
+                            <option value="">Carregando cidades...</option>
+                        </select>
+                    </div>
+                </div>
 
-            <div class="col-md-4">
-                <label class="form-label">CEP:</label>
-                <input type="text" th:field="*{cep}" class="form-control" id="cep" onblur="buscarCep()" placeholder="00000-000">
-            </div>
-            <div class="col-md-8">
-                <label class="form-label">Rua/Logradouro:</label>
-                <input type="text" th:field="*{logradouro}" class="form-control" id="logradouro">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Número:</label>
-                <input type="text" th:field="*{numero}" class="form-control">
-            </div>
-            <div class="col-md-8">
-                <label class="form-label">Bairro:</label>
-                <input type="text" th:field="*{bairro}" class="form-control" id="bairro">
-            </div>
-            <div class="col-md-10">
-                <label class="form-label">Cidade:</label>
-                <input type="text" th:field="*{cidade}" class="form-control" id="cidade">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">UF:</label>
-                <input type="text" th:field="*{uf}" class="form-control" id="uf">
-            </div>
+                <div class="form-group" style="display: grid; grid-template-columns: 3fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Logradouro</label>
+                        <input type="text" th:field="*{logradouro}" class="form-control" placeholder="Rua..." required>
+                    </div>
+                    <div>
+                        <label>Número</label>
+                        <input type="text" th:field="*{numero}" class="form-control" placeholder="123" required>
+                    </div>
+                </div>
 
-            <div class="col-12 mt-4">
-                <button type="submit" class="btn btn-custom">Finalizar Cadastro</button>
+                <div class="form-group">
+                    <label>Bairro</label>
+                    <input type="text" th:field="*{bairro}" class="form-control" placeholder="Bairro" required>
+                </div>
+
+                <h4 style="color: #666; margin: 15px 0 10px 0; border-bottom: 1px solid #eee; padding-bottom: 5px;">Acesso</h4>
+
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" th:field="*{email}" class="form-control" placeholder="seu@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" th:field="*{senha}" id="senha" class="form-control" onkeyup="validarSenha()" placeholder="Mínimo 8 caracteres" required>
+                    <div id="password-requirements" class="password-req">
+                        <div id="req-length" class="req-item"><i class="fas fa-times"></i> Mínimo 8 caracteres</div>
+                        <div id="req-upper" class="req-item"><i class="fas fa-times"></i> Letra Maiúscula</div>
+                        <div id="req-number" class="req-item"><i class="fas fa-times"></i> Número</div>
+                        <div id="req-special" class="req-item"><i class="fas fa-times"></i> Símbolo Especial</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Confirmar Senha</label>
+                    <input type="password" name="confirmarSenha" id="confirmarSenha" class="form-control" onkeyup="validarConfirmacao()" placeholder="Repita a senha" required>
+                    <small id="msgConfirmacao" style="display:none; font-weight:bold; margin-top:5px;"></small>
+                </div>
+
+                <button type="submit" id="btnRegistrar" class="btn-custom" disabled style="width:100%; padding:10px; background:#20c997; color:white; border:none; border-radius:5px; margin-top:10px; opacity:0.6; cursor:not-allowed;">
+                    Cadastrar
+                </button>
+            </form>
+
+            <div class="login-footer" style="text-align: center; margin-top: 15px;">
+                <a th:href="@{/login}" style="color: #20c997;">Já tenho conta</a>
             </div>
-            
-            <div class="col-12 text-center mt-3">
-                <a th:href="@{/login}" style="text-decoration: none; color: #666;">Já tem conta? Faça Login</a>
-            </div>
-        </form>
-    </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: rodape}"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
-        function buscarCep() {
-            var cep = document.getElementById('cep').value.replace(/\D/g, '');
-            if (cep != "") {
-                var script = document.createElement('script');
-                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
-                document.body.appendChild(script);
+        // 1. Configuração do Select2 e API do IBGE
+        $(document).ready(function() {
+            // Inicializa o Select2 no campo cidade
+            $('#selectCidade').select2({
+                placeholder: "Pesquise sua cidade...",
+                allowClear: true,
+                language: {
+                    noResults: function() {
+                        return "Cidade não encontrada";
+                    }
+                }
+            });
+
+            // Busca todas as cidades do Brasil na API do IBGE
+            const urlIBGE = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios";
+            
+            fetch(urlIBGE)
+                .then(response => response.json())
+                .then(data => {
+                    // Ordena as cidades por nome
+                    data.sort((a, b) => a.nome.localeCompare(b.nome));
+
+                    let options = '<option value="">Selecione a cidade...</option>';
+                    data.forEach(cidade => {
+                        // Salva "Nome" como valor
+                        let valor = `${cidade.nome}`; 
+                        options += `<option value="${valor}">${valor}</option>`;
+                    });
+                    
+                    $('#selectCidade').html(options);
+                })
+                .catch(err => console.error("Erro ao carregar cidades:", err));
+        });
+
+        // 2. Validação de Senha (Mantida Original)
+        function validarSenha() {
+            const senha = document.getElementById('senha').value;
+            document.getElementById('password-requirements').style.display = 'block';
+            updateItem('req-length', senha.length >= 8);
+            updateItem('req-upper', /[A-Z]/.test(senha));
+            updateItem('req-number', /[0-9]/.test(senha));
+            updateItem('req-special', /[@#$%^&+=!_]/.test(senha));
+            validarConfirmacao();
+        }
+        function updateItem(id, valid) {
+            const el = document.getElementById(id);
+            if (valid) {
+                el.classList.add('valid');
+                el.innerHTML = '<i class="fas fa-check"></i> ' + el.innerText.replace('Create', '').trim();
+            } else {
+                el.classList.remove('valid');
             }
         }
-        function meu_callback(conteudo) {
-            if (!("erro" in conteudo)) {
-                document.getElementById('logradouro').value=(conteudo.logradouro);
-                document.getElementById('bairro').value=(conteudo.bairro);
-                document.getElementById('cidade').value=(conteudo.localidade);
-                document.getElementById('uf').value=(conteudo.uf);
+        function validarConfirmacao() {
+            const senha = document.getElementById('senha').value;
+            const confirmacao = document.getElementById('confirmarSenha').value;
+            const msg = document.getElementById('msgConfirmacao');
+            const btn = document.getElementById('btnRegistrar');
+            const senhasIguais = (senha === confirmacao) && senha.length > 0;
+            const regrasOk = document.querySelectorAll('.req-item.valid').length >= 4;
+
+            if (confirmacao.length > 0) {
+                msg.style.display = 'block';
+                if (senhasIguais) { msg.style.color = '#28a745'; msg.innerText = 'Senhas conferem'; }
+                else { msg.style.color = '#dc3545'; msg.innerText = 'Senhas não conferem'; }
+            }
+            if (senhasIguais && regrasOk) {
+                btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+            } else {
+                btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'not-allowed';
             }
         }
     </script>
-
 </body>
 </html>

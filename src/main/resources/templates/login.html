@@ -2,49 +2,147 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login - SpeedMedical</title>
+    <title>Login - VidaPlus</title>
+    <th:block th:replace="~{fragments/favicon :: icone}"></th:block>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-    <nav>
-        <h1 style="width: 100%; text-align: center;">SpeedMedical</h1>
-    </nav>
+    <div th:replace="~{fragments/header :: navbar}"></div>
 
-    <main>
-        <div class="card-container login-size">
-            <h2>Login</h2>
-
-            <div th:if="${param.error}" class="error">
-                CPF ou senha incorretos.
-            </div>
-            <div th:if="${param.logout}" class="alert-success">
-                Logout realizado com sucesso.
+    <main class="main-center">
+        <div class="login-container">
+            <div class="login-header">
+                <h2><i class="fas fa-heartbeat" style="color: #20c997;"></i> VidaPlus</h2>
+                <p>Gestão Hospitalar Inteligente</p>
             </div>
 
-            <form th:action="@{/login}" method="post">
+            <div th:if="${param.error}" class="alert-box alert-error">
+                <i class="fas fa-exclamation-circle"></i> Usuário ou senha inválidos.
+            </div>
+
+            <div th:if="${param.disabled}" class="alert-box alert-blocked">
+                <i class="fas fa-user-lock"></i> 
+                <div><strong>Acesso Bloqueado</strong><br>Aguarde aprovação do administrador.</div>
+            </div>
+
+            <div th:if="${param.logout}" class="alert-box" style="background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;">
+                <i class="fas fa-sign-out-alt"></i> Logout realizado com sucesso.
+            </div>
+
+            <div id="geo-error" class="alert-box alert-blocked" style="display: none; background: #fee2e2; color: #991b1b; border: 1px solid #f87171;">
+                <i class="fas fa-map-marker-alt"></i> 
+                <div>
+                    <strong>Localização Obrigatória!</strong><br>
+                    Você deve permitir o acesso à sua localização para fazer login e registrar seu polo atual.
+                </div>
+            </div>
+
+            <form id="loginForm" th:action="@{/login}" method="post">
+                
+                <input type="hidden" name="latitude" id="latitude">
+                <input type="hidden" name="longitude" id="longitude">
+
                 <div class="form-group">
-                    <label for="username">Usuário (CPF)</label>
-                    <input type="text" id="username" name="username" placeholder="000.000.000-00" required autofocus>
+                    <label>Login</label>
+                    <div class="input-icon-wrapper">
+                        <input type="text" name="username" class="form-control" placeholder="CPF ou Username" required autofocus>
+                        <i class="fas fa-user input-icon-left"></i>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" name="password" placeholder="********" required>
+                    <label>Senha</label>
+                    <div class="input-icon-wrapper">
+                        <input type="password" name="password" class="form-control" placeholder="Sua senha" required>
+                        <i class="fas fa-lock input-icon-left"></i>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn-custom">Entrar</button>
+                <div class="forgot-wrapper">
+                    <a th:href="@{/forgot-password}" class="forgot-link">Esqueceu a senha?</a>
+                </div>
+
+                <button type="submit" id="btnLogin" class="btn-custom">
+                    ENTRAR <i class="fas fa-arrow-right ms-2"></i>
+                </button>
             </form>
 
-            <div class="links">
-                <p>Novo por aqui? <a th:href="@{/register}">Cadastre-se</a></p>
+            <div class="login-footer">
+                <p>Não possui acesso?</p>
+                <a th:href="@{/register}">Solicitar Cadastro</a>
             </div>
         </div>
     </main>
 
-    <footer>
-        &copy; 2025 SpeedMedical
-    </footer>
+    <div th:replace="~{fragments/footer :: rodape}"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById('loginForm');
+            const btnLogin = document.getElementById('btnLogin');
+            const latInput = document.getElementById('latitude');
+            const lonInput = document.getElementById('longitude');
+            const geoErrorBox = document.getElementById('geo-error');
+
+            function mostrarErroGeo(msg) {
+                geoErrorBox.style.display = 'flex'; // Exibe o alerta
+                // Opcional: Desabilitar botão visualmente
+                btnLogin.style.opacity = '0.6';
+                btnLogin.style.cursor = 'not-allowed';
+            }
+
+            function ocultarErroGeo() {
+                geoErrorBox.style.display = 'none';
+                btnLogin.style.opacity = '1';
+                btnLogin.style.cursor = 'pointer';
+            }
+
+            // 1. Tenta pegar a localização ao carregar
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        // Sucesso: Preenche e libera
+                        latInput.value = position.coords.latitude;
+                        lonInput.value = position.coords.longitude;
+                        ocultarErroGeo();
+                        console.log("📍 Localização capturada:", latInput.value, lonInput.value);
+                    },
+                    function(error) {
+                        // Erro/Negação: Mostra alerta
+                        console.warn("Permissão de localização negada.");
+                        mostrarErroGeo();
+                    },
+                    { timeout: 10000, enableHighAccuracy: true }
+                );
+            } else {
+                alert("Seu navegador não suporta geolocalização. O login não será possível.");
+            }
+
+            // 2. Intercepta o envio do formulário (Trava de Segurança)
+            form.addEventListener('submit', function(event) {
+                if (!latInput.value || !lonInput.value) {
+                    event.preventDefault(); // IMPEDE O LOGIN
+                    mostrarErroGeo();
+                    
+                    // Tenta pedir permissão novamente com força
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            latInput.value = position.coords.latitude;
+                            lonInput.value = position.coords.longitude;
+                            ocultarErroGeo();
+                            // Se conseguir agora, submete o formulário
+                            form.submit();
+                        },
+                        function(error) {
+                            alert("ERRO CRÍTICO: A geolocalização é uma regra de negócio obrigatória.\n\nPor favor, habilite a permissão no ícone de cadeado do seu navegador e recarregue a página.");
+                        }
+                    );
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
